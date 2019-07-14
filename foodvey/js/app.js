@@ -1,6 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var elems = document.querySelectorAll('.sidenav');
-    var options = { edge: 'left' }
-
-    M.Sidenav.init(elems, options);
-});
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('worker registered', reg))
+    .catch(err => console.log('worker not registered', err))
+}
