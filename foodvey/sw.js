@@ -1,5 +1,5 @@
-const staticCache = 'food-vey-v5'
-const dynamicCache = 'food-vey-v2'
+const staticCacheName = 'food-vey-static-v1'
+const dynamicCacheName = 'food-vey-dynamic-v1'
 const fallbackPage = '/pages/fallback.html'
 
 const assets = [
@@ -16,21 +16,35 @@ const assets = [
     'https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
 ]
 
+const cacheSizeLimiter = (name, size) => {
+    caches.open(name).then(cache => {
+        cache.keys().then(keys => {
+            if (keys.length > size)
+                cache.delete(keys[0])
+                    .then(limitCacheSize(name, size))
+        })
+    })
+}
+
 // handle fetch failure with fallback
 const fallbackHandler = (request) => fetch(request)
     .then(fetchResponse => {
-        return caches.open(dynamicCache)
+        return caches.open(dynamicCacheName)
             .then(cache => {
-                cache.put(evt.request.url, fetchResponse.clone())
+                cache.put(request.url, fetchResponse.clone())
+                cacheSizeLimiter(dynamicCacheName, 5)
                 return fetchResponse
             })
     })
-    .catch(() => caches.match(fallbackPage)) // returns promise
+    .catch(() => {
+        if (request.url.indexOf('.html'))
+            return caches.match(fallbackPage)
+    })
 
 self.addEventListener('install', evt => {
     // console.log('service worker installed', evt)
     evt.waitUntil(
-        caches.open(staticCache).then(cache => {
+        caches.open(staticCacheName).then(cache => {
             cache.addAll(assets)
         })
     )
@@ -42,7 +56,7 @@ self.addEventListener('activate', evt => {
         caches.keys().then(
             keys => Promise.all(
                 keys
-                    .filter(key => ![staticCache, dynamicCache].includes(key))
+                    .filter(key => ![staticCacheName, dynamicCacheName].includes(key))
                     .map(key => caches.delete(key))
             )
         )
