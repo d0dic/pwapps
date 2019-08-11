@@ -1,6 +1,10 @@
-const cacheName = 'food-vey-v5'
+const staticCache = 'food-vey-v5'
+const dynamicCache = 'food-vey-v2'
+const fallbackPage = '/pages/fallback.html'
+
 const assets = [
     '/',
+    fallbackPage,
     '/index.html',
     '/js/materialize.min.js',
     '/css/materialize.min.css',
@@ -12,10 +16,21 @@ const assets = [
     'https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
 ]
 
+// handle fetch failure with fallback
+const fallbackHandler = (request) => fetch(request)
+    .then(fetchResponse => {
+        return caches.open(dynamicCache)
+            .then(cache => {
+                cache.put(evt.request.url, fetchResponse.clone())
+                return fetchResponse
+            })
+    })
+    .catch(() => caches.match(fallbackPage)) // returns promise
+
 self.addEventListener('install', evt => {
     // console.log('service worker installed', evt)
     evt.waitUntil(
-        caches.open(cacheName).then(cache => {
+        caches.open(staticCache).then(cache => {
             cache.addAll(assets)
         })
     )
@@ -27,14 +42,12 @@ self.addEventListener('activate', evt => {
         caches.keys().then(
             keys => Promise.all(
                 keys
-                    .filter(key => key !== cacheName)
+                    .filter(key => ![staticCache, dynamicCache].includes(key))
                     .map(key => caches.delete(key))
             )
         )
     )
 })
-
-// self.addEventListener('push', evt => console.log('service worker push registered', evt))
 
 self.addEventListener(
     'fetch',
@@ -42,7 +55,9 @@ self.addEventListener(
         // console.log('service worker fetch triggered', evt.request)
         evt.respondWith(
             caches.match(evt.request)
-                .then(cachedAsset => cachedAsset || fetch(evt.request))
+                .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
         )
     },
 )
+
+// self.addEventListener('push', evt => console.log('service worker push registered', evt))
