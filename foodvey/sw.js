@@ -1,5 +1,5 @@
 const staticCacheName = 'food-vey-static-v1'
-const dynamicCacheName = 'food-vey-dynamic-v1'
+const dynamicCacheName = 'food-vey-dynamic-v2'
 const fallbackPage = '/pages/fallback.html'
 
 const assets = [
@@ -21,7 +21,7 @@ const cacheSizeLimiter = (name, size) => {
         cache.keys().then(keys => {
             if (keys.length > size)
                 cache.delete(keys[0])
-                    .then(limitCacheSize(name, size))
+                    .then(cacheSizeLimiter(name, size))
         })
     })
 }
@@ -66,11 +66,12 @@ self.addEventListener('activate', evt => {
 self.addEventListener(
     'fetch',
     evt => {
-        // console.log('service worker fetch triggered', evt.request)
-        evt.respondWith(
-            caches.match(evt.request)
-                .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
-        )
+        // console.log('service worker fetch triggered', evt.request.url)
+        // if(evt.request.url.indexOf('firestore.googleapis.com') === -1)
+        //     evt.respondWith(
+        //         caches.match(evt.request)
+        //             .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
+        //     )
     },
 )
 
