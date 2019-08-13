@@ -1,8 +1,10 @@
-const renderDish = dish => console.log(dish.data())
+const renderDish = async dish => {
+    const data = await dish.get()
+    console.log(data.data())
+}
 
 db.collection('orders').onSnapshot((snapshot) => {
     snapshot.docChanges().forEach(change => {
-        change.doc.data()
-            .dish.get().then(renderDish)
+        renderDish(change.doc.data().dish)
     })
 })

@@ -41,19 +41,19 @@
     </ul>
 
     <div class="container">
-        <div class="row">
+        <div class="row" id="menu-dishes">
             <div class="col s12 m6">
                 <div class="card">
                     <div class="card-image">
                         <img src="/images/food.jpg">
-                        <span class="card-title">1st Dish</span>
+                        <span class="card-title">Dish of the Day</span>
                         <a class="btn-floating halfway-fab waves-effect waves-light red"><i
                                 class="material-icons">add</i></a>
                     </div>
                     <div class="card-content">
-                        <p>I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.</p>
-                        <p>Price: <span class="badge">1 USD</span></p>
+                        <p>I am a very simple dish. I am good at containing small bits of food. I am convenient
+                            because I require little ingreients to use effectively.</p>
+                        <p>Price: <span class="badge">1 RSD</span></p>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,12 @@
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="/js/materialize.min.js"></script>
 
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-firestore.js"></script>
+
     <script type="text/javascript" src="/js/app.js"></script>
+    <script type="text/javascript" src="/js/db/menu.js"></script>
     <script type="text/javascript" src="/js/ui.js"></script>
 </body>
 
