@@ -15,9 +15,11 @@ fetchMyOrders = async userId => {
         .where('user', '==', userRef)
         .get()
 
-    // render only first dish
-    renderOrder(orders.docs[0])
-    setMyOrders(orders.docs)
+    // render only last dish
+    if (orders.docs.length > 0) {
+        renderOrder(orders.docs[orders.docs.length - 1])
+        setMyOrders(orders.docs)
+    }
 }
 
 const renderUser = ({ name, balance }) => {
