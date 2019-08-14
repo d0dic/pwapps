@@ -1,8 +1,11 @@
+const menuContainer = document.getElementById('menu-dishes')
+menuContainer.innerHTML = '<p>Loading...</p>'
+
 const renderDish = async dishProvider => {
-    const dish = await dishProvider.get()
+    let dish = await dishProvider.get()
     const dishData = dish.data()
 
-    const frame = `<div class="col s12 m6">
+    dish = `<div class="col s12 m6">
         <div class="card">
             <div class="card-image">
                 <img src="/images/food.jpg">
@@ -17,12 +20,19 @@ const renderDish = async dishProvider => {
         </div>
     </div>`
 
-    document.getElementById('menu-dishes').innerHTML += frame
+    menuContainer.innerHTML += dish
 }
 
 db.collection('menu').onSnapshot((snapshot) => {
     snapshot.docChanges().forEach(change => {
-        change.doc.data().dishes.forEach(renderDish)
-        // console.log(change.doc.data())
+        const dishes = change.doc.data().dishes
+
+        if (!dishes.length) {
+            menuContainer.innerHTML = '<p>No dishes...</p>'
+            return
+        }
+
+        menuContainer.innerHTML = ''
+        dishes.forEach(renderDish)
     })
 })
