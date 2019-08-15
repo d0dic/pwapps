@@ -1,7 +1,8 @@
 const user = getUser()
+const ordersState = document.getElementById('orders-state')
 const ordersContainer = document.getElementById('user-orders')
 
-ordersContainer.innerHTML = '<p>Loading...</p>'
+ordersState.innerHTML = '<p>Loading...</p>'
 
 const renderOrder = async orderProvider => {
     const dish = await orderProvider.data().dish.get()
@@ -23,13 +24,17 @@ const loadOrders = async userRef => {
         .where('user', '==', userRef)
         .get()
 
-    ordersContainer.innerHTML = ''
+    if (orders.empty) {
+        return ordersState.innerHTML = '<p>No orders...</p>'
+    }
+
+    ordersState.innerHTML = ''
     orders.forEach(renderOrder)
 }
 
-if (user) {
-    const userRef = db.collection('users').doc(user.id)
-    loadOrders(userRef)
-} else {
-    ordersContainer.innerHTML = '<p>No orders...</p>'
+if (!user) {
+    window.location.assign('/pages/login.html')
 }
+    
+// const userRef = db.collection('users').doc(user.uid)
+loadOrders(user.uid)

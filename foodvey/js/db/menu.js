@@ -2,7 +2,15 @@ const user = getUser()
 const menuContainer = document.getElementById('menu-dishes')
 menuContainer.innerHTML = '<p>Loading...</p>'
 
-const orderDish = dishId => {
+const increaseBalance = price => {
+
+    const increaseBy = firebase.firestore.FieldValue.increment(price);
+    db.collection('users').doc(user.uid).update({
+        balance: increaseBy,
+    })
+}
+
+const orderDish = (dishId, price) => {
 
     if (!user) {
         // TODO: Provide login page
@@ -10,11 +18,14 @@ const orderDish = dishId => {
     }
 
     db.collection('orders').add({ 
-        user: db.collection('users').doc(user.id),
+        user: user.uid,
         dish: db.collection('dishes').doc(dishId),
     })
     // TODO: Increase users balance
-    .then(() => alert('Order has been sent to provider. Thank you!'))
+    .then(() => {
+        alert('Order has been sent to provider. Thank you!')
+        increaseBalance(price)
+    })
     .catch(err => {
         alert('Order failed for some reason. Please try later!')
         console.log('Order failed: ', err)
@@ -30,7 +41,7 @@ const renderDish = async dishProvider => {
                 <img src="/images/food.jpg">
                 <span class="card-title">${dish.data().name}</span>
                 <a class="btn-floating halfway-fab waves-effect waves-light red" 
-                    onclick="orderDish('${dish.id}')">
+                    onclick="orderDish('${dish.id}', ${dish.data().price})">
                     <i class="material-icons">add</i>
                 </a>
             </div>
