@@ -7,7 +7,10 @@ const setMenu = () => {
 }
 
 const setOrdersFilter = () => {
-    const dateOptions = { format: 'dd/mm/yyyy' }
+    const dateOptions = { 
+        format: 'dd/mm/yyyy',
+        maxDate: new Date()
+    }
     const elem = document.querySelectorAll('.datepicker');
 
     M.Datepicker.init(elem, dateOptions);

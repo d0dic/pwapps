@@ -41,5 +41,6 @@ firebase.auth().onAuthStateChanged(user => {
         setUser(user.providerData[0])
     } else {
         // No user is signed in.
+        removeUser()
     }
 })

@@ -1,6 +1,21 @@
+let dishes = []
+let dishNameFilter = null
+
 const user = getUser()
+const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+
+const dishSearchForm = document.getElementById('dish-search')
+const menuStatus = document.getElementById('menu-status')
 const menuContainer = document.getElementById('menu-dishes')
-menuContainer.innerHTML = '<p>Loading...</p>'
+menuStatus.innerText = 'Loading...'
+
+const clearSearch = () => {
+    dishNameFilter = null
+    dishSearchForm.reset()
+    renderMenu()
+}
+
+const getDayName = () => daysOfWeek[(new Date()).getDay()]
 
 const increaseBalance = price => {
 
@@ -30,8 +45,15 @@ const getFormattedDate = () => {
 const orderDish = (dishId, price) => {
 
     if (!user) {
-        // TODO: Provide login page
         return alert('You have to be logged in so you can proceed with order!');
+    }
+
+    const confirmOrder = confirm(
+        `This will increase your debt to supplier for ${price} RSD, do you agree?`
+    )
+
+    if (!confirmOrder) {
+        return
     }
 
     db.collection('orders').add({
@@ -51,6 +73,11 @@ const orderDish = (dishId, price) => {
 
 const renderDish = async dishProvider => {
     let dish = await dishProvider.get()
+    const dishName = dish.data().name.toLowerCase()
+    
+    if (dishNameFilter && !dishName.includes(dishNameFilter)) {
+        return
+    }
 
     const dishRender = `<div class="col s12 m6">
         <div class="card">
@@ -70,19 +97,47 @@ const renderDish = async dishProvider => {
     </div>`
 
     menuContainer.innerHTML += dishRender
+    menuStatus.innerText = ''
+
 }
 
-// TODO: Implement search by dish name
-db.collection('menu').onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach(change => {
-        const dishes = change.doc.data().dishes
+const searchDishes = evt => {
 
-        if (!dishes.length) {
-            menuContainer.innerHTML = '<p>No dishes...</p>'
-            return
-        }
+    evt.preventDefault()
 
-        menuContainer.innerHTML = ''
-        dishes.forEach(renderDish)
-    })
-})
+    const name = dishSearchForm.dishName.value
+
+    if (!name) {
+        return
+    }
+
+    dishNameFilter = name.toLowerCase()
+
+    renderMenu('No matches...')
+}
+
+const renderMenu = (status = '') => {
+
+    menuStatus.innerText = status
+    menuContainer.innerHTML = ''
+
+    dishes.forEach(renderDish)
+}
+
+const loadMenu = async () => {
+
+    const menu = await db.collection('menu')
+        .where('day', '==', getDayName())
+        .get()
+
+    if (menu.empty) {
+        menuStatus.innerText = 'No dishes ready for today...'
+        return
+    }
+
+    dishes = menu.docs[0].data().dishes
+    renderMenu()
+}
+
+dishSearchForm.addEventListener('submit', searchDishes)
+loadMenu()

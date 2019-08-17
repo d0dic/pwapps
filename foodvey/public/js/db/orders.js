@@ -23,7 +23,8 @@ const filterOrders = date => loadOrders(user.uid, date)
 
 const loadOrders = async (userId, date) => {
 
-    let query = db.collection('orders').where('user', '==', userId)
+    let query = db.collection('orders')
+        .where('user', '==', userId)
 
     if (date) {
         query = query.where('created_at', '==', date)
@@ -31,10 +32,10 @@ const loadOrders = async (userId, date) => {
 
     const orders = await query.get()
 
+    ordersContainer.innerHTML = ''
     ordersState.innerText = ''
 
     if (orders.empty) {
-        ordersContainer.innerHTML = ''
         ordersState.innerText = 'No orders...'
         return
     }

@@ -28,6 +28,7 @@
                 <i class="material-icons">menu</i>
             </a>
             <ul class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
                 <li><a href="/pages/profile.html">Profile</a></li>
                 <li><a href="/pages/orders.html">Orders</a></li>
             </ul>
@@ -40,25 +41,26 @@
                 <h5><i class="material-icons">room_service</i> FoodVEY</h5>
             </a>
         </li>
+        <li><a href="/">Home</a></li>
         <li><a href="/pages/profile.html">Profile</a></li>
         <li><a href="/pages/orders.html">Orders</a></li>
     </ul>
 
     <div class="container">
 
-
         <div class="row">
-            <form class="col s11">
+            <form class="col s11" id="dish-search">
                 <div class="input-field">
                     <label class="label-icon" for="search">
                         <i class="material-icons">search</i>
                     </label>
-                    <input style="padding-left: 30px" id="search" placeholder="Dish name..." type="search" required>
-                    <i class="material-icons">close</i>
+                    <input style="padding-left: 30px" name="dishName" placeholder="Dish name..." type="search" required>
+                    <i class="material-icons" onclick="clearSearch()">close</i>
                 </div>
             </form>
         </div>
 
+        <p id="menu-status"></p>
         <div class="row" id="menu-dishes"></div>
     </div>
 
