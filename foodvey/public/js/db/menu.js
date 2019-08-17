@@ -10,6 +10,23 @@ const increaseBalance = price => {
     })
 }
 
+const getFormattedDate = () => {
+
+    const today = new Date()
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+
+    const yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+
+    return dd + '/' + mm + '/' + yyyy
+}
+
 const orderDish = (dishId, price) => {
 
     if (!user) {
@@ -17,19 +34,19 @@ const orderDish = (dishId, price) => {
         return alert('You have to be logged in so you can proceed with order!');
     }
 
-    db.collection('orders').add({ 
+    db.collection('orders').add({
         user: user.uid,
         dish: db.collection('dishes').doc(dishId),
+        created_at: getFormattedDate(),
     })
-    // TODO: Increase users balance
-    .then(() => {
-        alert('Order has been sent to provider. Thank you!')
-        increaseBalance(price)
-    })
-    .catch(err => {
-        alert('Order failed for some reason. Please try later!')
-        console.log('Order failed: ', err)
-    })
+        .then(() => {
+            alert('Order has been sent to provider. Thank you!')
+            increaseBalance(price)
+        })
+        .catch(err => {
+            alert('Order failed for some reason. Please try later!')
+            console.log('Order failed: ', err)
+        })
 }
 
 const renderDish = async dishProvider => {
@@ -55,6 +72,7 @@ const renderDish = async dishProvider => {
     menuContainer.innerHTML += dishRender
 }
 
+// TODO: Implement search by dish name
 db.collection('menu').onSnapshot((snapshot) => {
     snapshot.docChanges().forEach(change => {
         const dishes = change.doc.data().dishes

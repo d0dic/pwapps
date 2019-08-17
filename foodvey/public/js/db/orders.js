@@ -2,7 +2,7 @@ const user = getUser()
 const ordersState = document.getElementById('orders-state')
 const ordersContainer = document.getElementById('user-orders')
 
-ordersState.innerHTML = '<p>Loading...</p>'
+ordersState.innerText = 'Loading...'
 
 const renderOrder = async orderProvider => {
     const dish = await orderProvider.data().dish.get()
@@ -19,16 +19,26 @@ const renderOrder = async orderProvider => {
     ordersContainer.innerHTML += order
 }
 
-const loadOrders = async userRef => {
-    const orders = await db.collection('orders')
-        .where('user', '==', userRef)
-        .get()
+const filterOrders = date => loadOrders(user.uid, date)
 
-    if (orders.empty) {
-        return ordersState.innerHTML = '<p>No orders...</p>'
+const loadOrders = async (userId, date) => {
+
+    let query = db.collection('orders').where('user', '==', userId)
+
+    if (date) {
+        query = query.where('created_at', '==', date)
     }
 
-    ordersState.innerHTML = ''
+    const orders = await query.get()
+
+    ordersState.innerText = ''
+
+    if (orders.empty) {
+        ordersContainer.innerHTML = ''
+        ordersState.innerText = 'No orders...'
+        return
+    }
+
     orders.forEach(renderOrder)
 }
 

@@ -2,11 +2,11 @@
   "name": "foodvey",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "public/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "milos_dodic@live.com",
   "license": "ISC"
 }
