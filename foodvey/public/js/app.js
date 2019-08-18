@@ -26,6 +26,16 @@ firebase.initializeApp(firebaseConfig);
 // Initialize Firestore
 const db = firebase.firestore();
 
+db.enablePersistence()
+    .catch(err => {
+        if (err.code === 'unimplemented') {
+            console.log('Data persistence is not available!');
+        }
+        if (err.code === 'failed-precondition') {
+            console.log('Data persistence failed!');
+        }
+    })
+
 // set variables
 var orders = []
 var menu = {}

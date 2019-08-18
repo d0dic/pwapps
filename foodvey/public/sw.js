@@ -1,15 +1,17 @@
-const staticCacheName = 'food-vey-static-v1'
-const dynamicCacheName = 'food-vey-dynamic-v2'
+const staticCacheName = 'food-vey-static-v4'
+const dynamicCacheName = 'food-vey-dynamic-v4'
 const fallbackPage = '/pages/fallback.html'
+const dynamicCacheLimit = 8
 
 const assets = [
     '/',
     fallbackPage,
     '/index.html',
-    '/js/materialize.min.js',
     '/css/materialize.min.css',
     '/css/styles.css',
+    '/js/materialize.min.js',
     '/js/app.js',
+    '/js/auth.js',
     '/js/ui.js',
     '/images/icons/foodvey-256x256.png',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
@@ -32,7 +34,7 @@ const fallbackHandler = (request) => fetch(request)
         return caches.open(dynamicCacheName)
             .then(cache => {
                 cache.put(request.url, fetchResponse.clone())
-                cacheSizeLimiter(dynamicCacheName, 5)
+                cacheSizeLimiter(dynamicCacheName, dynamicCacheLimit)
                 return fetchResponse
             })
     })
@@ -67,11 +69,11 @@ self.addEventListener(
     'fetch',
     evt => {
         // console.log('service worker fetch triggered', evt.request.url)
-        // if(evt.request.url.indexOf('firestore.googleapis.com') === -1)
-        //     evt.respondWith(
-        //         caches.match(evt.request)
-        //             .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
-        //     )
+        if(evt.request.url.indexOf('firestore.googleapis.com') === -1)
+            evt.respondWith(
+                caches.match(evt.request)
+                    .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
+            )
     },
 )
 
