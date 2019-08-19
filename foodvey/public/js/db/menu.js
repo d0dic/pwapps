@@ -2,7 +2,6 @@ let dishes = []
 let dishNameFilter = null
 
 const user = getUser()
-const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
 const dishSearchForm = document.getElementById('dish-search')
 const menuStatus = document.getElementById('menu-status')
@@ -14,8 +13,6 @@ const clearSearch = () => {
     dishSearchForm.reset()
     renderMenu()
 }
-
-const getDayName = () => daysOfWeek[(new Date()).getDay()]
 
 const increaseBalance = price => {
 

@@ -47,5 +47,4 @@ if (!user) {
     window.location.assign('/pages/login.html')
 }
     
-// const userRef = db.collection('users').doc(user.uid)
 loadOrders(user.uid)

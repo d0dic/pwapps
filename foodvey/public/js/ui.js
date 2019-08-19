@@ -7,7 +7,7 @@ const setMenu = () => {
 }
 
 const setOrdersFilter = () => {
-    const dateOptions = { 
+    const dateOptions = {
         format: 'dd/mm/yyyy',
         maxDate: new Date()
     }
@@ -16,9 +16,15 @@ const setOrdersFilter = () => {
     M.Datepicker.init(elem, dateOptions);
 }
 
+const setModal = () => {
+    var elems = document.querySelectorAll('.modal');
+    M.Modal.init(elems, {})
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
     setOrdersFilter()
+    setModal()
     setMenu()
 });
 

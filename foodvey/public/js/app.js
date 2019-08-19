@@ -35,10 +35,9 @@ db.enablePersistence()
             console.log('Data persistence failed!');
         }
     })
-
-// set variables
-var orders = []
-var menu = {}
+    
+const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+const getDayName = () => daysOfWeek[(new Date()).getDay()]
 
 const setUser = user => localStorage.setItem('user', JSON.stringify(user))
 const getUser = () => JSON.parse(localStorage.getItem('user'))
