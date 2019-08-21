@@ -71,7 +71,7 @@ const orderDish = (dishId, price) => {
 const renderDish = async dishProvider => {
     let dish = await dishProvider.get()
     const dishName = dish.data().name.toLowerCase()
-    
+
     if (dishNameFilter && !dishName.includes(dishNameFilter)) {
         return
     }
@@ -123,9 +123,13 @@ const renderMenu = (status = '') => {
 
 const loadMenu = async () => {
 
-    const menu = await db.collection('menu')
-        .where('day', '==', getDayName())
-        .get()
+    const query = db.collection('menu')
+
+    let menu = await query.where('day', '==', getDayName()).get()
+
+    if (menu.empty) {
+        menu = await query.where('day', '==', 'all').get()
+    }
 
     if (menu.empty) {
         menuStatus.innerText = 'No dishes ready for today...'

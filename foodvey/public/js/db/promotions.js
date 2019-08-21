@@ -6,13 +6,16 @@ const promoDesc = document.getElementById('promo-description')
 const loadPromotions = async (day) => {
 
     let query = db.collection('promotions')
-        .where('day', '==', day)
 
-    const promotions = await query.get()
+    // check for today
+    let promotions = await query.where('day', '==', day).get()
 
+    // trye for all days
     if (promotions.empty) {
-        return
+        promotions = await query.where('day', '==', 'all').get()
     }
+
+    if (promotions.empty) return
 
     promoter.style = 'display: block'
     promotion = promotions.docs[0].data()

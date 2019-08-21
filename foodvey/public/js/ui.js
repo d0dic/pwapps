@@ -17,13 +17,19 @@ const setOrdersFilter = () => {
 }
 
 const setModal = () => {
-    var elems = document.querySelectorAll('.modal');
+    const elems = document.querySelectorAll('.modal');
     M.Modal.init(elems, {})
+}
+
+const setTooltips = () => {
+    const elems = document.querySelectorAll('.tooltipped');
+    M.Tooltip.init(elems, {});
 }
 
 document.addEventListener('DOMContentLoaded', function () {
 
     setOrdersFilter()
+    setTooltips()
     setModal()
     setMenu()
 });

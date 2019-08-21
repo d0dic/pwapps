@@ -11,12 +11,18 @@ const renderOrder = async orderProvider => {
         <i class="large material-icons circle red">room_service</i>
         <span class="title">${dish.data().name}</span>
         <p>${dish.data().ingredients}</p>
-        <a href="#!" class="secondary-content">
-            <i class="material-icons">grade</i>
+        <a href="#!" 
+            class="secondary-content tooltipped" 
+            data-tooltip="${orderProvider.data().created_at}"
+            data-position="left" 
+        >
+            <i class="material-icons">calendar_today</i>
         </a>
     </li>`
 
     ordersContainer.innerHTML += order
+
+    setTooltips()
 }
 
 const filterOrders = date => loadOrders(user.uid, date)
