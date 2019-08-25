@@ -1,7 +1,3 @@
-// Service worker
-
-importScripts('js/eventHandlers/notifications.js')
-
 const staticCacheName = 'food-vey-static-v5'
 const dynamicCacheName = 'food-vey-dynamic-v5'
 const fallbackPage = '/pages/fallback.html'
@@ -73,12 +69,10 @@ self.addEventListener(
     'fetch',
     evt => {
         // console.log('service worker fetch triggered', evt.request.url)
-        // if(evt.request.url.indexOf('firestore.googleapis.com') === -1)
-        //     evt.respondWith(
-        //         caches.match(evt.request)
-        //             .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
-        //     )
+        if(evt.request.url.indexOf('firestore.googleapis.com') === -1)
+            evt.respondWith(
+                caches.match(evt.request)
+                    .then(cachedAsset => cachedAsset || fallbackHandler(evt.request))
+            )
     },
 )
-
-// self.addEventListener('push', evt => console.log('service worker push registered', evt))
