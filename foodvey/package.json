@@ -1,0 +1,12 @@
+{
+  "name": "foodvey",
+  "version": "1.2.0",
+  "description": "Food ordering app",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "milos_dodic@live.com",
+  "license": "ISC"
+}
